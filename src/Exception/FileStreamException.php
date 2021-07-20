@@ -7,12 +7,12 @@ namespace Artemeon\StreamContext\Exception;
 use Exception;
 
 /**
- * Base class for all package related exceptions
+ * @since 0.1
  */
 class FileStreamException extends Exception
 {
-    public static function fromMessage(string $message): self
+    public static function fromMessage(string $message, Exception $previous = null): self
     {
-        return new self($message);
+        return new self($message, 0, $previous);
     }
 }

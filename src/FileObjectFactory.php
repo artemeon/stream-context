@@ -4,44 +4,59 @@ declare(strict_types=1);
 
 namespace Artemeon\StreamContext;
 
-use Artemeon\StreamContext\Context\StreamContext;
 use Artemeon\StreamContext\Exception\FileStreamException;
+use Artemeon\StreamContext\Exception\StreamContextException;
 use SplFileObject;
 
+/**
+ * Helper class to create an check file streams based on the given FileStream configuration
+ *
+ * @since 0.1
+ */
 final class FileObjectFactory
 {
     /**
+     * Creates a streamable SplFileObject based on the given FileStream configuration
+     *
      * @throws FileStreamException
      */
-    public static function forMode(string $mode, string $url,  StreamContext $streamContext = null, string $extension = ''): SplFileObject
+    public static function create(FileStream $fileStream): SplFileObject
     {
-        $isRemoteSource = preg_match("/^(?!file)\w+:\/\//", $url) === 1;
-        $file = new SplFileObject($url, $mode, false, $streamContext->createStreamContext());
+        $file = new SplFileObject(
+            $fileStream->getUrl(),
+            $fileStream->getMode(),
+            false,
+            self::createStreamContext($fileStream)
+
+        );
+
+        $isRemoteSource = preg_match("/^(?!file)\w+:\/\//", $fileStream->getUrl()) === 1;
 
         // isReadable only works for local filesystems
         if (!$file->isReadable() && !$isRemoteSource) {
-            throw FileStreamException::fromMessage("File: '{$url}' is not readable");
+            throw FileStreamException::fromMessage("File: '{$fileStream->getUrl()}' is not readable");
         }
 
-        if ($file->getExtension() !== $extension && $extension !== "") {
+        if ($file->getExtension() !== $fileStream->getFileExtension() && $fileStream->getFileExtension() !== "") {
             throw new FileStreamException("'File extension must be lowercase 'csv'");
         }
 
         return $file;
     }
 
-    public static function read(string $url, StreamContext $streamContext = null, string $extension = ''): SplFileObject
+    /**
+     * @throws FileStreamException
+     */
+    private static function createStreamContext(FileStream $fileStream)
     {
-        return self::forMode('r', $url, $streamContext, $extension);
-    }
+        try {
+            if ($fileStream->getStreamContext() === null) {
+                return null;
+            }
 
-    public static function readAndWrite(string $url, StreamContext $streamContext = null, string $extension = ''): SplFileObject
-    {
-        return self::forMode('rw', $url, $streamContext, $extension);
-    }
-
-    public static function create(FileStream $fileStream): SplFileObject
-    {
-
+            return $fileStream->getStreamContext()->createStreamContext();
+        } catch (StreamContextException $exception) {
+            throw FileStreamException::fromMessage($exception->getMessage(), $exception);
+        }
     }
 }

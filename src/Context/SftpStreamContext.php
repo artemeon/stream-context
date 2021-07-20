@@ -7,11 +7,10 @@ namespace Artemeon\StreamContext\Context;
 use phpseclib3\Net\SFTP\Stream;
 
 /**
- * Factory to create sftp://host.com/home/user/filename context based on the
+ * Object to create sftp://host.com/home/user/filename context based on the phpseclib.
  *
  * @see https://phpseclib.com/docs/sftp#customizing-the-protocol
- *
- * @since 8.0
+ * @since 0.1
  */
 final class SftpStreamContext extends StreamContext
 {
