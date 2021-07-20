@@ -38,7 +38,7 @@ final class FileObjectFactory
         }
 
         if ($file->getExtension() !== $fileStream->getFileExtension() && $fileStream->getFileExtension() !== "") {
-            throw new FileStreamException("'File extension must be lowercase 'csv'");
+            throw new FileStreamException("File extension must be lowercase: " . $fileStream->getFileExtension());
         }
 
         return $file;
