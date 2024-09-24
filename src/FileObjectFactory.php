@@ -6,39 +6,46 @@ namespace Artemeon\StreamContext;
 
 use Artemeon\StreamContext\Exception\FileStreamException;
 use Artemeon\StreamContext\Exception\StreamContextException;
+use LogicException;
+use RuntimeException;
 use SplFileObject;
 
 /**
- * Helper class to create an check file streams based on the given FileStream configuration
- *
- * @since 0.1
+ * Helper class to create an check file streams based on the given FileStream configuration.
  */
 final class FileObjectFactory
 {
     /**
-     * Creates a streamable SplFileObject based on the given FileStream configuration
+     * Creates a streamable SplFileObject based on the given FileStream configuration.
      *
      * @throws FileStreamException
      */
     public static function create(FileStream $fileStream): SplFileObject
     {
-        $file = new SplFileObject(
-            $fileStream->getUrl(),
-            $fileStream->getMode(),
-            false,
-            self::createStreamContext($fileStream)
-
-        );
+        try {
+            $file = new SplFileObject(
+                $fileStream->getUrl(),
+                $fileStream->getMode(),
+                false,
+                self::createStreamContext($fileStream),
+            );
+        } catch (LogicException | RuntimeException $e) {
+            throw new FileStreamException($e->getMessage(), $e->getCode(), $e);
+        }
 
         $isRemoteSource = preg_match("/^(?!file)\w+:\/\//", $fileStream->getUrl()) === 1;
+        $hasFileExtension = preg_match("/\.\w+$/", $fileStream->getUrl()) === 1;
 
         // isReadable only works for local filesystems
         if (!$file->isReadable() && !$isRemoteSource) {
             throw FileStreamException::fromMessage("File: '{$fileStream->getUrl()}' is not readable");
         }
 
-        if ($file->getExtension() !== $fileStream->getFileExtension() && $fileStream->getFileExtension() !== "") {
-            throw new FileStreamException("File extension must be lowercase: " . $fileStream->getFileExtension());
+        // Enforce file extension check only for file's with an explizit extension
+        if ($hasFileExtension && $fileStream->getFileExtension() !== '') {
+            if ($file->getExtension() !== $fileStream->getFileExtension()) {
+                throw new FileStreamException("'File extension must be lowercase: " . $fileStream->getFileExtension() . ', given: ' . $file->getExtension());
+            }
         }
 
         return $file;
