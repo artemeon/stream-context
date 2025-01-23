@@ -22,7 +22,7 @@ abstract class StreamContext
         $resource = stream_context_create($this->getContextOptions());
 
         if (!is_resource($resource)) {
-            throw StreamContextException::fromMessage("Can't create stream context for: " . __CLASS__);
+            throw StreamContextException::fromMessage("Can't create stream context for: " . self::class);
         }
 
         return $resource;

@@ -14,18 +14,14 @@ use phpseclib3\Net\SFTP\Stream;
  */
 final class SftpStreamContext extends StreamContext
 {
-    private const PROTOCOL = 'sftp';
+    private const string PROTOCOL = 'sftp';
 
-    private string $username;
-    private string $password;
-    private string $privateKey;
-
-    private function __construct(string $username, string $password, string $privateKey)
+    private function __construct(
+        private readonly string $username,
+        private readonly string $password,
+        private readonly string $privateKey
+    )
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->privateKey = $privateKey;
-
         Stream::register(self::PROTOCOL);
     }
 

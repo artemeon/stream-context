@@ -13,21 +13,17 @@ use Artemeon\StreamContext\Context\StreamContext;
  */
 final class FileStream
 {
-    private string $url;
     private string $mode = "r";
-    private ?StreamContext $streamContext;
     private string $fileExtension = '';
 
-    private function __construct(string $url, ?StreamContext $streamContext)
+    private function __construct(private readonly string $url, private readonly ?StreamContext $streamContext)
     {
-        $this->url = $url;
-        $this->streamContext = $streamContext;
     }
 
     /**
      * Named constructor to create an instance base on the given streaming url and context parameters
      */
-    public static function fromUrl(string $url, StreamContext $streamContext = null): self
+    public static function fromUrl(string $url, ?StreamContext $streamContext = null): self
     {
         return new self($url, $streamContext);
     }

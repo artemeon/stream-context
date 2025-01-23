@@ -11,17 +11,14 @@ namespace Artemeon\StreamContext\Context;
  */
 final class HttpStreamContext extends StreamContext
 {
-    public const PROTOCOL = 'http';
-
-    private string $method = 'GET';
+    public const string PROTOCOL = 'http';
     private array $headers = [];
     private string $content = "";
     private string $userAgent = "";
     private float $timeout = 10.0;
 
-    private function __construct(string $method)
+    private function __construct(private readonly string $method)
     {
-        $this->method = $method;
     }
 
     /**
