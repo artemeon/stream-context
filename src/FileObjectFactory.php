@@ -52,9 +52,11 @@ final class FileObjectFactory
     }
 
     /**
+     * @return resource|null
+     *
      * @throws FileStreamException
      */
-    private static function createStreamContext(FileStream $fileStream)
+    private static function createStreamContext(FileStream $fileStream): mixed
     {
         try {
             if ($fileStream->getStreamContext() === null) {

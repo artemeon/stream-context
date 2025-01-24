@@ -13,9 +13,9 @@ abstract class StreamContext
 {
     /**
      * @throws StreamContextException
-     * @return Resource Context resource created by stream_context_create()
+     * @return resource Context resource created by stream_context_create()
      */
-    public function createStreamContext()
+    public function createStreamContext(): mixed
     {
         $resource = stream_context_create($this->getContextOptions());
 
