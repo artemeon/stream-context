@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Artemeon\StreamContext;
 
 use Artemeon\StreamContext\Exception\FileStreamException;
-use Artemeon\StreamContext\Exception\StreamContextException;
 use LogicException;
 use RuntimeException;
 use SplFileObject;
@@ -37,11 +36,11 @@ final class FileObjectFactory
         $hasFileExtension = preg_match("/\.\w+$/", $fileStream->getUrl()) === 1;
 
         // isReadable only works for local filesystems
-        if (!$file->isReadable() && !$isRemoteSource) {
+        if (!$isRemoteSource && !$file->isReadable()) {
             throw FileStreamException::fromMessage("File: '{$fileStream->getUrl()}' is not readable");
         }
 
-        // Enforce file extension check only for file's with an explizit extension
+        // Enforce file extension check only for files with an explizit extension.
         if ($hasFileExtension && $fileStream->getFileExtension() !== '') {
             if ($file->getExtension() !== $fileStream->getFileExtension()) {
                 throw new FileStreamException("'File extension must be lowercase: " . $fileStream->getFileExtension() . ', given: ' . $file->getExtension());
@@ -52,19 +51,10 @@ final class FileObjectFactory
     }
 
     /**
-     * @throws FileStreamException
      * @return resource|null
      */
     private static function createStreamContext(FileStream $fileStream): mixed
     {
-        try {
-            if ($fileStream->getStreamContext() === null) {
-                return null;
-            }
-
-            return $fileStream->getStreamContext()->createStreamContext();
-        } catch (StreamContextException $exception) {
-            throw FileStreamException::fromMessage($exception->getMessage(), $exception);
-        }
+        return $fileStream->getStreamContext()?->createStreamContext();
     }
 }

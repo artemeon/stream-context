@@ -78,7 +78,7 @@ final class HttpStreamContext extends StreamContext
      */
     public function setHeaders(array $headers): void
     {
-        $this->headers = $headers;
+        $this->headers = [...$this->headers, ...$headers];
     }
 
     /**

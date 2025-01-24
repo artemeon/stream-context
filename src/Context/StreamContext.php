@@ -12,18 +12,11 @@ use Artemeon\StreamContext\Exception\StreamContextException;
 abstract class StreamContext
 {
     /**
-     * @throws StreamContextException
-     * @return resource Context resource created by stream_context_create()
+     * @return resource
      */
     public function createStreamContext(): mixed
     {
-        $resource = stream_context_create($this->getContextOptions());
-
-        if (!is_resource($resource)) {
-            throw StreamContextException::fromMessage("Can't create stream context for: " . self::class);
-        }
-
-        return $resource;
+        return stream_context_create($this->getContextOptions());
     }
 
     abstract protected function getContextOptions(): array;

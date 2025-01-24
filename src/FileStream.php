@@ -19,7 +19,7 @@ final class FileStream
     }
 
     /**
-     * Named constructor to create an instance base on the given streaming url and context parameters.
+     * A named constructor to create an instance base on the given streaming url and context parameters.
      */
     public static function fromUrl(string $url, ?StreamContext $streamContext = null): self
     {
@@ -27,7 +27,7 @@ final class FileStream
     }
 
     /**
-     * @param string $mode Standard mode id read only, use this method to change file modes supporte by the used stream wrapper
+     * @param string $mode Standard mode id read only, use this method to change file modes supporte by the used stream wrapper.
      * @see https://www.php.net/manual/de/function.fopen.php
      */
     public function setMode(string $mode): void
