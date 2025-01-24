@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Artemeon\StreamContext\Context;
 
-use Artemeon\StreamContext\Exception\StreamContextException;
-
 /**
  * Base class for ale protocol specific stream context options.
  */

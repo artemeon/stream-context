@@ -4,8 +4,8 @@ use Artemeon\StreamContext\Context\HttpStreamContext;
 
 use function Pest\Faker\fake;
 
-describe('HttpStreamContext', function () {
-    test('forGet()', function () {
+describe('HttpStreamContext', function (): void {
+    test('forGet()', function (): void {
         $context = HttpStreamContext::forGet();
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
@@ -25,7 +25,7 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('forPost()', function () {
+    test('forPost()', function (): void {
         $content = fake()->text();
 
         $context = HttpStreamContext::forPost($content);
@@ -49,9 +49,9 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('forPostUrlencoded()', function () {
+    test('forPostUrlencoded()', function (): void {
         $content = [
-            'foo' => fake()->text()
+            'foo' => fake()->text(),
         ];
 
         $context = HttpStreamContext::forPostUrlencoded($content);
@@ -77,7 +77,7 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('forPut()', function () {
+    test('forPut()', function (): void {
         $content = fake()->text();
 
         $context = HttpStreamContext::forPut($content);
@@ -101,9 +101,9 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('forPutUrlencoded()', function () {
+    test('forPutUrlencoded()', function (): void {
         $content = [
-            'foo' => fake()->text()
+            'foo' => fake()->text(),
         ];
 
         $context = HttpStreamContext::forPutUrlencoded($content);
@@ -129,7 +129,7 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('setHeaders()', function () {
+    test('setHeaders()', function (): void {
         $header = 'X-' . fake()->word() . ': ' . fake()->word();
 
         $context = HttpStreamContext::forGet();
@@ -148,7 +148,7 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('setUserAgent()', function () {
+    test('setUserAgent()', function (): void {
         $userAgent = fake()->userAgent();
 
         $context = HttpStreamContext::forGet();
@@ -169,7 +169,7 @@ describe('HttpStreamContext', function () {
             ->toBeResource();
     });
 
-    test('setTimeout()', function () {
+    test('setTimeout()', function (): void {
         $timeout = fake()->randomFloat(min: 11.0);
 
         $context = HttpStreamContext::forGet();

@@ -1,13 +1,11 @@
 <?php
 
-use Artemeon\StreamContext\Context\HttpStreamContext;
-
 use Artemeon\StreamContext\Context\SftpStreamContext;
 
 use function Pest\Faker\fake;
 
-describe('HttpStreamContext', function () {
-    test('forPasswordAuthentication()', function () {
+describe('HttpStreamContext', function (): void {
+    test('forPasswordAuthentication()', function (): void {
         $username = fake()->userName();
         $password = fake()->password();
 
@@ -30,7 +28,7 @@ describe('HttpStreamContext', function () {
             ->toBe($password);
     });
 
-    test('forPrivateKeyAuthentication()', function () {
+    test('forPrivateKeyAuthentication()', function (): void {
         $privateKey = fake()->password();
 
         $context = SftpStreamContext::forPrivateKeyAuthentication($privateKey);
