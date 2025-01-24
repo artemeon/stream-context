@@ -21,3 +21,20 @@ jobs:
         run: composer install --no-interaction --no-ansi --no-progress
       - name: Run Type-Coverage
         run: ./vendor/bin/pest --type-coverage --min=100
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          coverage: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Composer install
+        run: composer install --no-interaction --no-ansi --no-progress
+      - name: Run Tests
+        run: ./vendor/bin/pest --parallel

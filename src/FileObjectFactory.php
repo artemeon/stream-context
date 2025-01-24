@@ -52,9 +52,8 @@ final class FileObjectFactory
     }
 
     /**
-     * @return resource|null
-     *
      * @throws FileStreamException
+     * @return resource|null
      */
     private static function createStreamContext(FileStream $fileStream): mixed
     {
