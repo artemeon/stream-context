@@ -20,6 +20,12 @@
     },
     "fully_qualified_strict_types": true,
     "function_to_constant": true,
+    "general_phpdoc_annotation_remove": {
+      "annotations": [
+        "since"
+      ],
+      "case_sensitive": false
+    },
     "get_class_to_class_keyword": true,
     "is_null": true,
     "lambda_not_used_import": true,

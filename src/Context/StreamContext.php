@@ -7,15 +7,13 @@ namespace Artemeon\StreamContext\Context;
 use Artemeon\StreamContext\Exception\StreamContextException;
 
 /**
- * Base class for ale protocol specific stream context options
- *
- * @since 0.1
+ * Base class for ale protocol specific stream context options.
  */
 abstract class StreamContext
 {
     /**
-     * @return Resource Context resource created by stream_context_create()
      * @throws StreamContextException
+     * @return Resource Context resource created by stream_context_create()
      */
     public function createStreamContext()
     {

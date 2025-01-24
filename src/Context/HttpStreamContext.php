@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Artemeon\StreamContext\Context;
 
 /**
- * Object to create http://host.com/home/user/filename context streams
- *
- * @since 0.1
+ * Object to create http://host.com/home/user/filename context streams.
  */
 final class HttpStreamContext extends StreamContext
 {
     public const string PROTOCOL = 'http';
     private array $headers = [];
-    private string $content = "";
-    private string $userAgent = "";
+    private string $content = '';
+    private string $userAgent = '';
     private float $timeout = 10.0;
 
     private function __construct(private readonly string $method)
@@ -22,7 +20,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Named constructor to create an instance for GET requests
+     * Named constructor to create an instance for GET requests.
      */
     public static function forGet(): self
     {
@@ -30,7 +28,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Named constructor to create an instance for a POST request with the given content string
+     * Named constructor to create an instance for a POST request with the given content string.
      */
     public static function forPost(string $content): self
     {
@@ -41,7 +39,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Named constructor to create an instance for POST request with url encoded form data
+     * Named constructor to create an instance for POST request with url encoded form data.
      */
     public static function forPostUrlencoded(array $parameters): self
     {
@@ -53,7 +51,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Named constructor to create an instance for a PUT request with the given content string
+     * Named constructor to create an instance for a PUT request with the given content string.
      */
     public static function forPut(string $content): self
     {
@@ -64,7 +62,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Named constructor to create an instance for PUT request with url encoded form data
+     * Named constructor to create an instance for PUT request with url encoded form data.
      */
     public static function forPutUrlencoded(array $parameters): self
     {
@@ -76,7 +74,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Add additional headers
+     * Add additional headers.
      */
     public function setHeaders(array $headers): void
     {
@@ -84,7 +82,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Set a custom user agent
+     * Set a custom user agent.
      */
     public function setUserAgent(string $userAgent): void
     {
@@ -92,9 +90,7 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Set a connect timeout in seconds, standard value is 10 seconds
-     *
-     * @param float $timeout
+     * Set a connect timeout in seconds, standard value is 10 seconds.
      */
     public function setTimeout(float $timeout): void
     {
@@ -106,7 +102,7 @@ final class HttpStreamContext extends StreamContext
         $context[self::PROTOCOL]['method'] = $this->method;
         $context[self::PROTOCOL]['timeout'] = $this->timeout;
 
-        if ($this->userAgent !== "") {
+        if ($this->userAgent !== '') {
             $context[self::PROTOCOL]['user_agent'] = $this->userAgent;
         }
 
@@ -114,7 +110,7 @@ final class HttpStreamContext extends StreamContext
             $context[self::PROTOCOL]['header'] = $this->headers;
         }
 
-        if ($this->content !== "") {
+        if ($this->content !== '') {
             $context[self::PROTOCOL]['content'] = $this->content;
         }
 

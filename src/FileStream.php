@@ -7,13 +7,11 @@ namespace Artemeon\StreamContext;
 use Artemeon\StreamContext\Context\StreamContext;
 
 /**
- * Configuration DTO for the file url and optional StreamContext options
- *
- * @since 0.1
+ * Configuration DTO for the file url and optional StreamContext options.
  */
 final class FileStream
 {
-    private string $mode = "r";
+    private string $mode = 'r';
     private string $fileExtension = '';
 
     private function __construct(private readonly string $url, private readonly ?StreamContext $streamContext)
@@ -21,7 +19,7 @@ final class FileStream
     }
 
     /**
-     * Named constructor to create an instance base on the given streaming url and context parameters
+     * Named constructor to create an instance base on the given streaming url and context parameters.
      */
     public static function fromUrl(string $url, ?StreamContext $streamContext = null): self
     {
