@@ -9,6 +9,9 @@
     "context"
   ],
   "scripts": {
+    "test": "./vendor/bin/pest --mutate",
+    "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=60",
+    "test:type-coverage": "./vendor/bin/pest --type-coverage --min=100",
     "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G"
   },
   "authors": [
@@ -33,7 +36,8 @@
     "rector/rector": "^2.0.7",
     "pestphp/pest": "^3.7",
     "pestphp/pest-plugin-type-coverage": "^3.2",
-    "pestphp/pest-plugin-faker": "^3.0"
+    "pestphp/pest-plugin-faker": "^3.0",
+    "pestphp/pest-plugin-watch": "^3.0"
   },
   "config": {
     "allow-plugins": {

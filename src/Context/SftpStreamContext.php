@@ -13,7 +13,7 @@ use phpseclib3\Net\SFTP\Stream;
  */
 final class SftpStreamContext extends StreamContext
 {
-    private const string PROTOCOL = 'sftp';
+    public const string PROTOCOL = 'sftp';
 
     private function __construct(
         private readonly string $username,

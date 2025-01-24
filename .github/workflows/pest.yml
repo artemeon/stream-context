@@ -20,7 +20,7 @@ jobs:
       - name: Composer install
         run: composer install --no-interaction --no-ansi --no-progress
       - name: Run Type-Coverage
-        run: ./vendor/bin/pest --type-coverage --min=100
+        run: composer test:type-coverage
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
@@ -37,4 +37,4 @@ jobs:
       - name: Composer install
         run: composer install --no-interaction --no-ansi --no-progress
       - name: Run Tests
-        run: ./vendor/bin/pest --coverage
+        run: composer test

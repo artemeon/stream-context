@@ -4,16 +4,13 @@ use Artemeon\StreamContext\Context\HttpStreamContext;
 
 use function Pest\Faker\fake;
 
+covers(HttpStreamContext::class);
 describe('HttpStreamContext', function (): void {
     test('forGet()', function (): void {
         $context = HttpStreamContext::forGet();
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
-
         $result = $reflection->invoke($context);
-
-        $stream = $context->createStreamContext();
 
         expect($result)
             ->toHaveKey('http')
@@ -21,8 +18,8 @@ describe('HttpStreamContext', function (): void {
             ->toHaveKey('method')
             ->and($result['http']['method'])
             ->toBe('GET')
-            ->and($stream)
-            ->toBeResource();
+            ->and($result['http'])
+            ->not->toHaveKey('content');
     });
 
     test('forPost()', function (): void {
@@ -31,11 +28,7 @@ describe('HttpStreamContext', function (): void {
         $context = HttpStreamContext::forPost($content);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
-
         $result = $reflection->invoke($context);
-
-        $stream = $context->createStreamContext();
 
         expect($result)
             ->toHaveKey('http')
@@ -44,9 +37,7 @@ describe('HttpStreamContext', function (): void {
             ->and($result['http']['method'])
             ->toBe('POST')
             ->and($result['http']['content'])
-            ->toBe($content)
-            ->and($stream)
-            ->toBeResource();
+            ->toBe($content);
     });
 
     test('forPostUrlencoded()', function (): void {
@@ -57,11 +48,7 @@ describe('HttpStreamContext', function (): void {
         $context = HttpStreamContext::forPostUrlencoded($content);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
-
         $result = $reflection->invoke($context);
-
-        $stream = $context->createStreamContext();
 
         expect($result)
             ->toHaveKey('http')
@@ -72,9 +59,7 @@ describe('HttpStreamContext', function (): void {
             ->and($result['http']['header'])
             ->toContain('Content-type: application/x-www-form-urlencoded')
             ->and($result['http']['content'])
-            ->toBe(http_build_query($content))
-            ->and($stream)
-            ->toBeResource();
+            ->toBe(http_build_query($content));
     });
 
     test('forPut()', function (): void {
@@ -83,11 +68,7 @@ describe('HttpStreamContext', function (): void {
         $context = HttpStreamContext::forPut($content);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
-
         $result = $reflection->invoke($context);
-
-        $stream = $context->createStreamContext();
 
         expect($result)
             ->toHaveKey('http')
@@ -96,9 +77,7 @@ describe('HttpStreamContext', function (): void {
             ->and($result['http']['method'])
             ->toBe('PUT')
             ->and($result['http']['content'])
-            ->toBe($content)
-            ->and($stream)
-            ->toBeResource();
+            ->toBe($content);
     });
 
     test('forPutUrlencoded()', function (): void {
@@ -109,13 +88,10 @@ describe('HttpStreamContext', function (): void {
         $context = HttpStreamContext::forPutUrlencoded($content);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
-
         $result = $reflection->invoke($context);
 
-        $stream = $context->createStreamContext();
-
         expect($result)
+            ->toBeArray()
             ->toHaveKey('http')
             ->and($result['http'])
             ->toHaveKey('method')
@@ -124,69 +100,72 @@ describe('HttpStreamContext', function (): void {
             ->and($result['http']['header'])
             ->toContain('Content-type: application/x-www-form-urlencoded')
             ->and($result['http']['content'])
-            ->toBe(http_build_query($content))
-            ->and($stream)
-            ->toBeResource();
+            ->toBe(http_build_query($content));
     });
 
     test('setHeaders()', function (): void {
-        $header = 'X-' . fake()->word() . ': ' . fake()->word();
+        $header1 = 'X-' . fake()->word() . ': ' . fake()->word();
+        $header2 = 'X-' . fake()->word() . ': ' . fake()->word();
 
         $context = HttpStreamContext::forGet();
-        $context->setHeaders([$header]);
+        $context->setHeaders([$header1]);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
+        $result1 = $reflection->invoke($context);
 
-        $result = $reflection->invoke($context);
+        $context->setHeaders([$header2]);
 
-        $stream = $context->createStreamContext();
+        $result2 = $reflection->invoke($context);
 
-        expect($result['http']['header'])
-            ->toContain($header)
-            ->and($stream)
-            ->toBeResource();
+        expect($result1['http']['header'])
+            ->toContain($header1)
+            ->and($result2['http']['header'])
+            ->toContain($header1)
+            ->and($result2['http']['header'])
+            ->toContain($header2);
     });
 
     test('setUserAgent()', function (): void {
         $userAgent = fake()->userAgent();
 
         $context = HttpStreamContext::forGet();
-        $context->setUserAgent($userAgent);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
 
         $result = $reflection->invoke($context);
 
-        $stream = $context->createStreamContext();
-
         expect($result['http'])
+            ->and($result['http'])
+            ->not->toHaveKey('user_agent');
+
+        $context->setUserAgent($userAgent);
+
+        $newResult = $reflection->invoke($context);
+
+        expect($newResult['http'])
             ->toHaveKey('user_agent')
-            ->and($result['http']['user_agent'])
-            ->toBe($userAgent)
-            ->and($stream)
-            ->toBeResource();
+            ->and($newResult['http']['user_agent'])
+            ->toBe($userAgent);
     });
 
     test('setTimeout()', function (): void {
-        $timeout = fake()->randomFloat(min: 11.0);
+        $timeout = fake()->randomFloat();
 
         $context = HttpStreamContext::forGet();
         $context->setTimeout($timeout);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
-        $reflection->setAccessible(true);
 
         $result = $reflection->invoke($context);
-
-        $stream = $context->createStreamContext();
 
         expect($result['http'])
             ->toHaveKey('timeout')
             ->and($result['http']['timeout'])
-            ->toBe($timeout)
-            ->and($stream)
+            ->toBe($timeout);
+    });
+
+    test('createStreamContext()', function (): void {
+        expect(HttpStreamContext::forGet()->createStreamContext())
             ->toBeResource();
     });
 });
