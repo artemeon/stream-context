@@ -14,7 +14,7 @@ use Artemeon\StreamContext\Exception\StreamContextException;
 abstract class StreamContext
 {
     /**
-     * @param Resource Context resource created by stream_context_create()
+     * @return Resource Context resource created by stream_context_create()
      * @throws StreamContextException
      */
     public function createStreamContext()
