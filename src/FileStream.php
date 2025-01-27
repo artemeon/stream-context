@@ -7,46 +7,44 @@ namespace Artemeon\StreamContext;
 use Artemeon\StreamContext\Context\StreamContext;
 
 /**
- * Configuration DTO for the file url and optional StreamContext options
- *
- * @since 0.1
+ * Configuration DTO for the file url and optional StreamContext options.
  */
 final class FileStream
 {
-    private string $url;
-    private string $mode = "r";
-    private ?StreamContext $streamContext;
-    private string $fileExtension = '';
+    private string $mode = 'r';
+    private ?string $fileExtension = null;
 
-    private function __construct(string $url, ?StreamContext $streamContext)
+    private function __construct(private readonly string $url, private readonly ?StreamContext $streamContext)
     {
-        $this->url = $url;
-        $this->streamContext = $streamContext;
     }
 
     /**
-     * Named constructor to create an instance base on the given streaming url and context parameters
+     * A named constructor to create an instance base on the given streaming url and context parameters.
      */
-    public static function fromUrl(string $url, StreamContext $streamContext = null): self
+    public static function fromUrl(string $url, ?StreamContext $streamContext = null): self
     {
         return new self($url, $streamContext);
     }
 
     /**
-     * @param string $mode Standard mode id read only, use this method to change file modes supporte by the used stream wrapper
+     * @param string $mode Standard mode id read only, use this method to change file modes supporte by the used stream wrapper.
      * @see https://www.php.net/manual/de/function.fopen.php
      */
-    public function setMode(string $mode): void
+    public function setMode(string $mode): self
     {
         $this->mode = $mode;
+
+        return $this;
     }
 
     /**
      * @param string $fileExtension Enforce file extension for security
      */
-    public function enforceFileExtension(string $fileExtension): void
+    public function enforceFileExtension(string $fileExtension): self
     {
         $this->fileExtension = $fileExtension;
+
+        return $this;
     }
 
     public function getUrl(): string
@@ -64,7 +62,7 @@ final class FileStream
         return $this->streamContext;
     }
 
-    public function getFileExtension(): string
+    public function getFileExtension(): ?string
     {
         return $this->fileExtension;
     }

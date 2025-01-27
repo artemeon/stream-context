@@ -5,10 +5,17 @@
   "type": "library",
   "description": "Library to create a stream context",
   "keywords": [
-    "php7",
     "stream",
     "context"
   ],
+  "scripts": {
+    "test": "./vendor/bin/pest",
+    "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --mutate --parallel --min=100",
+    "test:type-coverage": "./vendor/bin/pest --type-coverage --min=100",
+    "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G",
+    "pint": "./vendor/bin/pint --test -v",
+    "pint:fix": "./vendor/bin/pint -v"
+  },
   "authors": [
     {
       "name": "Dietmar Simons",
@@ -21,7 +28,22 @@
     }
   },
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.4",
     "phpseclib/phpseclib": "~3.0"
+  },
+  "require-dev": {
+    "laravel/pint": "^1.20.0",
+    "mockery/mockery": "^1.6.12",
+    "phpstan/phpstan": "^2.1.2",
+    "rector/rector": "^2.0.7",
+    "pestphp/pest": "^3.7",
+    "pestphp/pest-plugin-type-coverage": "^3.2",
+    "pestphp/pest-plugin-faker": "^3.0",
+    "pestphp/pest-plugin-watch": "^3.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   }
 }

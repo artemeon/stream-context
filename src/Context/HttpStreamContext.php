@@ -5,50 +5,49 @@ declare(strict_types=1);
 namespace Artemeon\StreamContext\Context;
 
 /**
- * Object to create http://host.com/home/user/filename context streams
- *
- * @since 0.1
+ * Object to create http://host.com/home/user/filename context streams.
  */
 final class HttpStreamContext extends StreamContext
 {
-    public const PROTOCOL = 'http';
+    public const string PROTOCOL = 'http';
 
-    private string $method = 'GET';
+    /** @var non-empty-string[] */
     private array $headers = [];
-    private string $content = "";
-    private string $userAgent = "";
-    private float $timeout = 10.0;
+    private ?string $content = null;
+    private ?string $userAgent = null;
+    private ?float $timeout = null;
 
-    private function __construct(string $method)
+    private function __construct(private readonly HttpMethod $method)
     {
-        $this->method = $method;
     }
 
     /**
-     * Named constructor to create an instance for GET requests
+     * Named constructor to create an instance for GET requests.
      */
     public static function forGet(): self
     {
-        return new self('GET');
+        return new self(HttpMethod::GET);
     }
 
     /**
-     * Named constructor to create an instance for a POST request with the given content string
+     * Named constructor to create an instance for a POST request with the given content string.
      */
     public static function forPost(string $content): self
     {
-        $instance = new self('POST');
+        $instance = new self(HttpMethod::POST);
         $instance->content = $content;
 
         return $instance;
     }
 
     /**
-     * Named constructor to create an instance for POST request with url encoded form data
+     * Named constructor to create an instance for POST request with url encoded form data.
+     *
+     * @param array<non-empty-string, string> $parameters
      */
     public static function forPostUrlencoded(array $parameters): self
     {
-        $instance = new self('POST');
+        $instance = new self(HttpMethod::POST);
         $instance->content = http_build_query($parameters);
         $instance->headers[] = 'Content-type: application/x-www-form-urlencoded';
 
@@ -56,22 +55,24 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Named constructor to create an instance for a PUT request with the given content string
+     * Named constructor to create an instance for a PUT request with the given content string.
      */
     public static function forPut(string $content): self
     {
-        $instance = new self('PUT');
+        $instance = new self(HttpMethod::PUT);
         $instance->content = $content;
 
         return $instance;
     }
 
     /**
-     * Named constructor to create an instance for PUT request with url encoded form data
+     * Named constructor to create an instance for PUT request with url encoded form data.
+     *
+     * @param array<non-empty-string, string> $parameters
      */
     public static function forPutUrlencoded(array $parameters): self
     {
-        $instance = new self('PUT');
+        $instance = new self(HttpMethod::PUT);
         $instance->content = http_build_query($parameters);
         $instance->headers[] = 'Content-type: application/x-www-form-urlencoded';
 
@@ -79,15 +80,17 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Add additional headers
+     * Add additional headers.
+     *
+     * @param non-empty-string[] $headers
      */
     public function setHeaders(array $headers): void
     {
-        $this->headers = $headers;
+        $this->headers = [...$this->headers, ...$headers];
     }
 
     /**
-     * Set a custom user agent
+     * Set a custom user agent.
      */
     public function setUserAgent(string $userAgent): void
     {
@@ -95,32 +98,42 @@ final class HttpStreamContext extends StreamContext
     }
 
     /**
-     * Set a connect timeout in seconds, standard value is 10 seconds
-     *
-     * @param float $timeout
+     * Set a connect timeout in seconds, standard value is 10 seconds.
      */
     public function setTimeout(float $timeout): void
     {
         $this->timeout = $timeout;
     }
 
+    /**
+     * @return array{
+     *     http: array{
+     *         method: 'GET' | 'POST' | 'PUT',
+     *         timeout: float,
+     *         user_agent?: non-falsy-string,
+     *         header?: non-empty-string[],
+     *         content?: string|null,
+     *     }
+     * }
+     */
     protected function getContextOptions(): array
     {
-        $context[self::PROTOCOL]['method'] = $this->method;
-        $context[self::PROTOCOL]['timeout'] = $this->timeout;
+        $context = [];
+        $context['method'] = $this->method->value;
+        $context['timeout'] = $this->timeout ?? 10.0;
 
-        if ($this->userAgent !== "") {
-            $context[self::PROTOCOL]['user_agent'] = $this->userAgent;
+        if (!empty($this->userAgent)) {
+            $context['user_agent'] = $this->userAgent;
         }
 
         if (!empty($this->headers)) {
-            $context[self::PROTOCOL]['header'] = $this->headers;
+            $context['header'] = $this->headers;
         }
 
-        if ($this->content !== "") {
-            $context[self::PROTOCOL]['content'] = $this->content;
+        if (!empty($this->content) || in_array($this->method, [HttpMethod::POST, HttpMethod::PUT], true)) {
+            $context['content'] = $this->content;
         }
 
-        return $context;
+        return [self::PROTOCOL => $context];
     }
 }

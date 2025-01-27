@@ -4,29 +4,21 @@ declare(strict_types=1);
 
 namespace Artemeon\StreamContext\Context;
 
-use Artemeon\StreamContext\Exception\StreamContextException;
-
 /**
- * Base class for ale protocol specific stream context options
- *
- * @since 0.1
+ * Base class for ale protocol specific stream context options.
  */
 abstract class StreamContext
 {
     /**
-     * @param Resource Context resource created by stream_context_create()
-     * @throws StreamContextException
+     * @return resource
      */
-    public function createStreamContext()
+    public function createStreamContext(): mixed
     {
-        $resource = stream_context_create($this->getContextOptions());
-
-        if (!is_resource($resource)) {
-            throw StreamContextException::fromMessage("Can't create stream context for: " . __CLASS__);
-        }
-
-        return $resource;
+        return stream_context_create($this->getContextOptions());
     }
 
+    /**
+     * @return array<non-empty-string, array<non-empty-string, mixed>>
+     */
     abstract protected function getContextOptions(): array;
 }
