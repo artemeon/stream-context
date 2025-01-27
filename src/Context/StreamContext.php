@@ -17,5 +17,8 @@ abstract class StreamContext
         return stream_context_create($this->getContextOptions());
     }
 
+    /**
+     * @return array<non-empty-string, array<non-empty-string, mixed>>
+     */
     abstract protected function getContextOptions(): array;
 }

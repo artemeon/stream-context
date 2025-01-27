@@ -11,6 +11,7 @@ final class HttpStreamContext extends StreamContext
 {
     public const string PROTOCOL = 'http';
 
+    /** @var non-empty-string[] */
     private array $headers = [];
     private ?string $content = null;
     private ?string $userAgent = null;
@@ -41,6 +42,8 @@ final class HttpStreamContext extends StreamContext
 
     /**
      * Named constructor to create an instance for POST request with url encoded form data.
+     *
+     * @param array<non-empty-string, string> $parameters
      */
     public static function forPostUrlencoded(array $parameters): self
     {
@@ -64,6 +67,8 @@ final class HttpStreamContext extends StreamContext
 
     /**
      * Named constructor to create an instance for PUT request with url encoded form data.
+     *
+     * @param array<non-empty-string, string> $parameters
      */
     public static function forPutUrlencoded(array $parameters): self
     {
@@ -76,6 +81,8 @@ final class HttpStreamContext extends StreamContext
 
     /**
      * Add additional headers.
+     *
+     * @param non-empty-string[] $headers
      */
     public function setHeaders(array $headers): void
     {
@@ -98,6 +105,17 @@ final class HttpStreamContext extends StreamContext
         $this->timeout = $timeout;
     }
 
+    /**
+     * @return array{
+     *     http: array{
+     *         method: 'GET' | 'POST' | 'PUT',
+     *         timeout: float,
+     *         user_agent?: non-empty-string,
+     *         header?: non-empty-string[],
+     *         content?: non-empty-string,
+     *     }
+     * }
+     */
     protected function getContextOptions(): array
     {
         $context[self::PROTOCOL]['method'] = $this->method->value;

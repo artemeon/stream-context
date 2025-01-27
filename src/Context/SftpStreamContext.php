@@ -44,6 +44,15 @@ final class SftpStreamContext extends StreamContext
         return new self('', '', $privateKey);
     }
 
+    /**
+     * @return array{
+     *     sftp: array{
+     *         privkey?: non-empty-string,
+     *         username?: non-empty-string,
+     *         password?: string,
+     *     }
+     * }
+     */
     protected function getContextOptions(): array
     {
         if ($this->privateKey !== '') {
