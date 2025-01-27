@@ -118,6 +118,9 @@ final class HttpStreamContext extends StreamContext
      */
     protected function getContextOptions(): array
     {
+        $context = [
+            self::PROTOCOL => [],
+        ];
         $context[self::PROTOCOL]['method'] = $this->method->value;
         $context[self::PROTOCOL]['timeout'] = $this->timeout ?? 10.0;
 
