@@ -118,24 +118,22 @@ final class HttpStreamContext extends StreamContext
      */
     protected function getContextOptions(): array
     {
-        $context = [
-            self::PROTOCOL => [],
-        ];
-        $context[self::PROTOCOL]['method'] = $this->method->value;
-        $context[self::PROTOCOL]['timeout'] = $this->timeout ?? 10.0;
+        $context = [];
+        $context['method'] = $this->method->value;
+        $context['timeout'] = $this->timeout ?? 10.0;
 
         if (!empty($this->userAgent)) {
-            $context[self::PROTOCOL]['user_agent'] = $this->userAgent;
+            $context['user_agent'] = $this->userAgent;
         }
 
         if (!empty($this->headers)) {
-            $context[self::PROTOCOL]['header'] = $this->headers;
+            $context['header'] = $this->headers;
         }
 
         if (!empty($this->content) || in_array($this->method, [HttpMethod::POST, HttpMethod::PUT], true)) {
-            $context[self::PROTOCOL]['content'] = $this->content;
+            $context['content'] = $this->content;
         }
 
-        return $context;
+        return [self::PROTOCOL => $context];
     }
 }

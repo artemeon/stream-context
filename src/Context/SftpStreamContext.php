@@ -55,17 +55,15 @@ final class SftpStreamContext extends StreamContext
      */
     protected function getContextOptions(): array
     {
-        $context = [
-            self::PROTOCOL => [],
-        ];
+        $context = [];
 
         if ($this->privateKey !== '') {
-            $context[self::PROTOCOL]['privkey'] = $this->privateKey;
+            $context['privkey'] = $this->privateKey;
         } else {
-            $context[self::PROTOCOL]['username'] = $this->username;
-            $context[self::PROTOCOL]['password'] = $this->password;
+            $context['username'] = $this->username;
+            $context['password'] = $this->password;
         }
 
-        return $context;
+        return [self::PROTOCOL => $context];
     }
 }
