@@ -9,10 +9,12 @@
     "context"
   ],
   "scripts": {
-    "test": "./vendor/bin/pest --mutate",
-    "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=60",
+    "test": "./vendor/bin/pest --order-by=random",
+    "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/pest --order-by=random --coverage --min=100",
     "test:type-coverage": "./vendor/bin/pest --type-coverage --min=100",
-    "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G"
+    "phpstan": "php ./vendor/bin/phpstan analyse --memory-limit=4G",
+    "pint": "./vendor/bin/pint --test -v",
+    "pint:fix": "./vendor/bin/pint -v"
   },
   "authors": [
     {

@@ -30,17 +30,21 @@ final class FileStream
      * @param string $mode Standard mode id read only, use this method to change file modes supporte by the used stream wrapper.
      * @see https://www.php.net/manual/de/function.fopen.php
      */
-    public function setMode(string $mode): void
+    public function setMode(string $mode): self
     {
         $this->mode = $mode;
+
+        return $this;
     }
 
     /**
      * @param string $fileExtension Enforce file extension for security
      */
-    public function enforceFileExtension(string $fileExtension): void
+    public function enforceFileExtension(string $fileExtension): self
     {
         $this->fileExtension = $fileExtension;
+
+        return $this;
     }
 
     public function getUrl(): string
