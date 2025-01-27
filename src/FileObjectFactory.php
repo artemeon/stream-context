@@ -23,10 +23,9 @@ final class FileObjectFactory
     {
         try {
             $file = new SplFileObject(
-                $fileStream->getUrl(),
-                $fileStream->getMode(),
-                false,
-                $fileStream->getStreamContext()?->createStreamContext(),
+                filename: $fileStream->getUrl(),
+                mode: $fileStream->getMode(),
+                context: $fileStream->getStreamContext()?->createStreamContext(),
             );
         } catch (LogicException | RuntimeException $e) {
             throw new FileStreamException($e->getMessage(), $e->getCode(), $e);
@@ -35,8 +34,8 @@ final class FileObjectFactory
         $hasFileExtension = preg_match("/\.\w+$/", $fileStream->getUrl()) === 1;
 
         // Enforce file extension check only for files with an explicit extension.
-        if ($hasFileExtension && $fileStream->getFileExtension() !== '' && $file->getExtension() !== $fileStream->getFileExtension()) {
-            throw FileStreamException::fromMessage("File extension must be lowercase: {$fileStream->getFileExtension()}, given: {$file->getExtension()}");
+        if ($hasFileExtension && !empty($fileStream->getFileExtension()) && $file->getExtension() !== $fileStream->getFileExtension()) {
+            throw new FileStreamException("File extension must be lowercase: {$fileStream->getFileExtension()}, given: {$file->getExtension()}");
         }
 
         return $file;

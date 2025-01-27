@@ -12,7 +12,7 @@ use Artemeon\StreamContext\Context\StreamContext;
 final class FileStream
 {
     private string $mode = 'r';
-    private string $fileExtension = '';
+    private ?string $fileExtension = null;
 
     private function __construct(private readonly string $url, private readonly ?StreamContext $streamContext)
     {
@@ -62,7 +62,7 @@ final class FileStream
         return $this->streamContext;
     }
 
-    public function getFileExtension(): string
+    public function getFileExtension(): ?string
     {
         return $this->fileExtension;
     }

@@ -7,6 +7,7 @@ use Artemeon\StreamContext\FileStream;
 
 use function Pest\Faker\fake;
 
+covers(FileStream::class);
 describe('FileStream', function (): void {
     test('fromUrl()', function (): void {
         $url = fake()->url();

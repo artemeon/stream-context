@@ -19,12 +19,12 @@ describe('HttpStreamContext', function (): void {
             ->and($result['http']['method'])
             ->toBe('GET')
             ->and($result['http'])
-            ->not->toHaveKey('content');
+            ->not->toHaveKey('content')
+            ->and($result['http']['timeout'])
+            ->toBe(10.0);
     });
 
-    test('forPost()', function (): void {
-        $content = fake()->text();
-
+    test('forPost()', function (mixed $content): void {
         $context = HttpStreamContext::forPost($content);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
@@ -38,7 +38,10 @@ describe('HttpStreamContext', function (): void {
             ->toBe('POST')
             ->and($result['http']['content'])
             ->toBe($content);
-    });
+    })->with([
+        'content' => [fake()->text()],
+        'no-content' => [''],
+    ]);
 
     test('forPostUrlencoded()', function (): void {
         $content = [
@@ -62,9 +65,7 @@ describe('HttpStreamContext', function (): void {
             ->toBe(http_build_query($content));
     });
 
-    test('forPut()', function (): void {
-        $content = fake()->text();
-
+    test('forPut()', function (mixed $content): void {
         $context = HttpStreamContext::forPut($content);
 
         $reflection = new ReflectionMethod($context, 'getContextOptions');
@@ -78,7 +79,10 @@ describe('HttpStreamContext', function (): void {
             ->toBe('PUT')
             ->and($result['http']['content'])
             ->toBe($content);
-    });
+    })->with([
+        'content' => [fake()->text()],
+        'no-content' => [''],
+    ]);
 
     test('forPutUrlencoded()', function (): void {
         $content = [

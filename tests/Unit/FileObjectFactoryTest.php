@@ -6,6 +6,7 @@ use Artemeon\StreamContext\Exception\FileStreamException;
 use Artemeon\StreamContext\FileObjectFactory;
 use Artemeon\StreamContext\FileStream;
 
+covers(FileObjectFactory::class);
 describe('FileObjectFactory', function (): void {
     test('create()', function (): void {
         $sut = FileObjectFactory::create(FileStream::fromUrl('php://memory'));
@@ -26,6 +27,18 @@ describe('FileObjectFactory', function (): void {
             ->toBeInstanceOf(SplFileObject::class)
             ->and($sut->getFilename())
             ->toBe('test.json');
+    });
+
+    test('create() with local file and no extension and enforced file extension', function (): void {
+        $sut = FileObjectFactory::create(
+            FileStream::fromUrl('file://' . dirname(__DIR__) . '/fixtures/no-extension')
+                ->enforceFileExtension('json'),
+        );
+
+        expect($sut)
+            ->toBeInstanceOf(SplFileObject::class)
+            ->and($sut->getFilename())
+            ->toBe('no-extension');
     });
 
     test('create() with directory', function (): void {

@@ -10,12 +10,13 @@ namespace Artemeon\StreamContext\Context;
 final class HttpStreamContext extends StreamContext
 {
     public const string PROTOCOL = 'http';
-    private array $headers = [];
-    private string $content = '';
-    private string $userAgent = '';
-    private float $timeout = 10.0;
 
-    private function __construct(private readonly string $method)
+    private array $headers = [];
+    private ?string $content = null;
+    private ?string $userAgent = null;
+    private ?float $timeout = null;
+
+    private function __construct(private readonly HttpMethod $method)
     {
     }
 
@@ -24,7 +25,7 @@ final class HttpStreamContext extends StreamContext
      */
     public static function forGet(): self
     {
-        return new self('GET');
+        return new self(HttpMethod::GET);
     }
 
     /**
@@ -32,7 +33,7 @@ final class HttpStreamContext extends StreamContext
      */
     public static function forPost(string $content): self
     {
-        $instance = new self('POST');
+        $instance = new self(HttpMethod::POST);
         $instance->content = $content;
 
         return $instance;
@@ -43,7 +44,7 @@ final class HttpStreamContext extends StreamContext
      */
     public static function forPostUrlencoded(array $parameters): self
     {
-        $instance = new self('POST');
+        $instance = new self(HttpMethod::POST);
         $instance->content = http_build_query($parameters);
         $instance->headers[] = 'Content-type: application/x-www-form-urlencoded';
 
@@ -55,7 +56,7 @@ final class HttpStreamContext extends StreamContext
      */
     public static function forPut(string $content): self
     {
-        $instance = new self('PUT');
+        $instance = new self(HttpMethod::PUT);
         $instance->content = $content;
 
         return $instance;
@@ -66,7 +67,7 @@ final class HttpStreamContext extends StreamContext
      */
     public static function forPutUrlencoded(array $parameters): self
     {
-        $instance = new self('PUT');
+        $instance = new self(HttpMethod::PUT);
         $instance->content = http_build_query($parameters);
         $instance->headers[] = 'Content-type: application/x-www-form-urlencoded';
 
@@ -99,10 +100,10 @@ final class HttpStreamContext extends StreamContext
 
     protected function getContextOptions(): array
     {
-        $context[self::PROTOCOL]['method'] = $this->method;
-        $context[self::PROTOCOL]['timeout'] = $this->timeout;
+        $context[self::PROTOCOL]['method'] = $this->method->value;
+        $context[self::PROTOCOL]['timeout'] = $this->timeout ?? 10.0;
 
-        if ($this->userAgent !== '') {
+        if (!empty($this->userAgent)) {
             $context[self::PROTOCOL]['user_agent'] = $this->userAgent;
         }
 
@@ -110,7 +111,7 @@ final class HttpStreamContext extends StreamContext
             $context[self::PROTOCOL]['header'] = $this->headers;
         }
 
-        if ($this->content !== '') {
+        if (!empty($this->content) || in_array($this->method, [HttpMethod::POST, HttpMethod::PUT], true)) {
             $context[self::PROTOCOL]['content'] = $this->content;
         }
 
