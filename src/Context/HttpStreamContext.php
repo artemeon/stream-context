@@ -112,7 +112,7 @@ final class HttpStreamContext extends StreamContext
      *         timeout: float,
      *         user_agent?: non-empty-string,
      *         header?: non-empty-string[],
-     *         content?: non-empty-string,
+     *         content?: string,
      *     }
      * }
      */

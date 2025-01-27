@@ -48,7 +48,7 @@ final class SftpStreamContext extends StreamContext
      * @return array{
      *     sftp: array{
      *         privkey?: non-empty-string,
-     *         username?: non-empty-string,
+     *         username?: string,
      *         password?: string,
      *     }
      * }
