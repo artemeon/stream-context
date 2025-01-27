@@ -110,9 +110,9 @@ final class HttpStreamContext extends StreamContext
      *     http: array{
      *         method: 'GET' | 'POST' | 'PUT',
      *         timeout: float,
-     *         user_agent?: non-empty-string,
+     *         user_agent?: non-falsy-string,
      *         header?: non-empty-string[],
-     *         content?: string,
+     *         content?: string|null,
      *     }
      * }
      */
