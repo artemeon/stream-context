@@ -1,6 +1,5 @@
 {
   "name": "artemeon/stream-context",
-  "version": "0.1.1",
   "license": "MIT",
   "type": "library",
   "description": "Library to create a stream context",
